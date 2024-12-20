@@ -1,5 +1,5 @@
 // Fetch the first movie's details and display them
-function loadFirstMovie() {
+function loadFirstFilm() {
   fetch('http://localhost:3000/films/1')
     .then(r => r.json())
     .then(movie => {
@@ -7,13 +7,13 @@ function loadFirstMovie() {
     });
 }
 
-// Fetch and display all movies in the menu
-function loadAllMovies() {
+// Fetch and display all movies
+function loadAllFilms() {
  fetch('http://localhost:3000/films')
    .then(r => r.json())
    .then(movies => {
      const filmsList = document.getElementById('films');
-     filmsList.innerHTML = ''; // Clear placeholder
+     filmsList.innerHTML = ''; 
      movies.forEach(movie => {
        const li = document.createElement('li');
        li.textContent = movie.title;
@@ -26,49 +26,49 @@ function loadAllMovies() {
 // Display movie details in the movie details section
 function displayMovieDetails(movie) {
   document.getElementById('movie-poster').src = movie.poster;
-  document.getElementById('movie-title').textContent = movie.title;
-  document.getElementById('movie-runtime').textContent = `Runtime: ${movie.runtime} min`;
-  document.getElementById('movie-showtime').textContent = `Showtime: ${movie.showtime}`;
+  document.getElementById('title').textContent = movie.title;
+  document.getElementById('runtime').textContent = `Runtime: ${movie.runtime} min`;
+  document.getElementById('showtime').textContent = `Showtime: ${movie.showtime}`;
   
-  const availableTickets = movie.capacity - movie.tickets_sold;
-  document.getElementById('movie-tickets').textContent = `Available Tickets: ${availableTickets}`;
+  const ticketsAvailable = movie.capacity - movie.tickets_sold;
+  document.getElementById('tickets').textContent = `Tickets Available: ${ticketsAvailable}`;
   
-  const buyButton = document.getElementById('buy-ticket');
-  buyButton.disabled = availableTickets === 0;
-  buyButton.textContent = availableTickets === 0 ? 'Sold Out' : 'Buy Ticket';
+  const purchaseButton = document.getElementById('ticket');
+  purchaseButton.disabled = ticketsAvailable === 0;
+  purchaseButton.textContent = ticketsAvailable === 0 ? 'Sold Out' : 'Buy Ticket';
 
   // Bind ticket purchase functionality
-  handleBuyTicket(movie);
+  purchaseTicket(movie);
 }
 
 // Initialize the app
 function init() {
- loadFirstMovie();
- loadAllMovies();
+ loadFirstFilm();
+ loadAllFilms();
 }
 
 document.addEventListener('DOMContentLoaded', init);
 
-// Handle ticket purchase
-function handleBuyTicket(movie) {
-  const buyButton = document.getElementById('buy-ticket');
+// Ticket purchase
+function purchaseTicket(movie) {
+  const purchaseButton = document.getElementById('ticket');
   
-  // Event listener for the Buy Ticket button
-  buyButton.addEventListener('click', () => {
-    const availableTickets = movie.capacity - movie.tickets_sold;
+  // Buy Ticket button
+  purchaseButton.addEventListener('click', () => {
+    const ticketsAvailable = movie.capacity - movie.tickets_sold;
     
-    if (availableTickets > 0) {
-      // Reduce the number of tickets sold
+    if (ticketsAvailable > 0) {
+      // Reduce the tickets sold
       movie.tickets_sold++;
       
-      // Update available tickets on the frontend
-      const newAvailableTickets = movie.capacity - movie.tickets_sold;
-      document.getElementById('movie-tickets').textContent = `Available Tickets: ${newAvailableTickets}`;
+      // Update available tickets
+      const newticketsAvailable = movie.capacity - movie.tickets_sold;
+      document.getElementById('tickets').textContent = `Available Tickets: ${newticketsAvailable}`;
       
-      // Disable button and update text if sold out
-      if (newAvailableTickets === 0) {
-        buyButton.disabled = true;
-        buyButton.textContent = 'Sold Out';
+      // Sold out tickets
+      if (newticketsAvailable === 0) {
+        purchaseButton.disabled = true;
+        purchaseButton.textContent = 'Sold Out';
       }
     }
   });
